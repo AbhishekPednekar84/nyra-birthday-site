@@ -116,6 +116,7 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            transition={{ delay: 4, duration: 1 }}
             whileTap={{ y: 5 }}
             className="flex justify-center items-center gap-2 w-60 bg-cyan-300 h-12 cursor-pointer rounded-md p-2 text-black shadow-cyan-300"
             disabled={sendingRsvp || rsvpSent}
@@ -199,7 +200,7 @@ export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
 
       <motion.div
         initial={{ height: 0, opacity: 0 }}
-        animate={{ height: "75vh", opacity: 1 }}
+        animate={{ height: showInvite ? "90vh" : "70vh", opacity: 1 }}
         transition={{ delay: 3, duration: 1 }}
         className="absolute top-1/2 left-1/2 lg:left-1/5 transform -translate-x-1/2 -translate-y-1/2 w-sm lg:w-2xl bg-black/75 p-4 lg:p-6 rounded-lg"
       >
@@ -260,7 +261,7 @@ export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
                     initial="initial"
                     animate="animate"
                     whileTap={{ y: 5 }}
-                    className="flex justify-center items-center gap-2 w-50 bg-cyan-300 h-12 cursor-pointer rounded-md p-2"
+                    className="flex justify-center items-center gap-2 w-50 bg-cyan-300 h-12 cursor-pointer rounded-md p-2 text-black"
                     onClick={handleShowInvite}
                   >
                     <PlayCircle className="h-6 w-6" />

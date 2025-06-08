@@ -30,3 +30,11 @@ export const PLANET_NAMES = [
   "Furya", // The Chronicles of Riddick
   "Cybertron", // Transformers
 ];
+
+export const FOOTER_TEXT = [
+  "...now go pick your party shoes, commander! 👟🚀",
+  "...fuel up on excitement — you're headed for a galaxy of giggles! 🌌😆",
+  "...don’t forget your space helmet and your party hat! 🪐🎉",
+  "...galactic giggles guaranteed. Bring your best laugh! 😂🛸",
+  "...star Command is counting on you to have a blast. 💃🕺✨",
+];

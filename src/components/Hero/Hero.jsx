@@ -1,31 +1,75 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import { PlayCircle } from "lucide-react";
+import { getGenderPronoun, getPersonalPronoun } from "@/utils/helpers";
+import axios from "axios";
+import ConfettiExplosion from "react-confetti-explosion";
+import { redirect } from "next/navigation";
 
 const opacityVariant = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
 };
 
-const Invite = () => {
+const Invite = ({ callout_name, token, invitee_identifier }) => {
+  const [sendingRsvp, setSendingRsvp] = useState(false);
+  const [rsvpSent, setRsvpSent] = useState(false);
+  const [rsvpData, setRsvpData] = useState({});
+
+  useEffect(() => {
+    if (rsvpData?.invitee_identifier) {
+      setSendingRsvp(false);
+      setRsvpSent(true);
+    }
+  }, [rsvpData]);
+
+  const handleSendRsvp = async () => {
+    const payload = { invitee_identifier };
+    const headers = `Bearer ${token}`;
+    setSendingRsvp(true);
+
+    try {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/invitees`,
+        payload,
+        {
+          headers: {
+            Authorization: headers,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res?.data) {
+        setRsvpData(res?.data);
+      }
+    } catch (error) {
+      return;
+    }
+  };
+
   return (
     <div className="text-cyan-300">
-      <p>INCOMING TRANSMISSION - TOP SECRET(ISH)</p>
+      <p className="text-orange-300">INCOMING TRANSMISSION - TOP SECRET(ISH)</p>
 
       <motion.div
         variants={opacityVariant}
         initial="initial"
         animate="animate"
-        transition={{ delay: 2, duration: 1 }}
+        transition={{ delay: 3, duration: 1 }}
       >
         <div className="my-4">
-          <p className="text-responsive">[ORIGIN: PLANET ROW]</p>
-          <p className="text-responsive">[To: Commander Nyra]</p>
+          <p className="text-responsive text-orange-300">
+            [ORIGIN: PLANET ROW]
+          </p>
+          <p className="text-responsive">[To: Commander {callout_name}]</p>
         </div>
 
         <div className="my-4">
-          <p className="text-responsive">{`>>> MISSION DIRECTIVE:`}</p>
+          <p className="text-responsive text-orange-300">{`>>> MISSION DIRECTIVE:`}</p>
           <p className="text-responsive">
             You’re officially invited to an out-of-this-world celebration for
             Commander Nyra’s birthday! 🎉🪐
@@ -33,7 +77,7 @@ const Invite = () => {
         </div>
 
         <div className="my-4">
-          <p className="text-responsive">{`>>> MISSION LOCATION:`}</p>
+          <p className="text-responsive text-orange-300">{`>>> MISSION LOCATION:`}</p>
           <p className="text-responsive">
             The party hall at the Republic of Whitefield Clubhouse – aka
             Galactic Party HQ
@@ -41,15 +85,14 @@ const Invite = () => {
         </div>
 
         <div className="my-4">
-          <p className="text-responsive">{`>>> MISSION WINDOW:`}</p>
+          <p className="text-responsive text-orange-300">{`>>> MISSION WINDOW:`}</p>
           <p className="text-responsive">
-            Saturday, June 21<sup>st</sup> between 11:30 AM and 2:30 PM
-            (Standard Earth Time)
+            Saturday, June 21<sup>st</sup> at 12:00 PM (Standard Earth Time)
           </p>
         </div>
 
         <div className="my-4">
-          <p className="text-responsive">{`>>> MISSION PARAMETERS:`}</p>
+          <p className="text-responsive text-orange-300">{`>>> MISSION PARAMETERS:`}</p>
           <p className="text-responsive">
             1. Hit the button below to accept your mission. ✅
           </p>
@@ -57,34 +100,48 @@ const Invite = () => {
             2. Fun is not optional — it's mandatory. 😄
           </p>
           <p className="text-responsive">
-            3. Success = full tummy + happy heart + and interstellar amounts of
-            fun! 🍰🎈🛸
+            3. Success = full tummy + happy heart + interstellar amounts of fun!
+            🍰🎈🛸
           </p>
         </div>
 
         <div className="my-4">
-          <p className="text-responsive">END OF TRANSMISSION</p>
+          <p className="text-responsive text-orange-300">END OF TRANSMISSION</p>
           <p className="text-responsive">
             (But the party is just getting started...)
           </p>
         </div>
 
-        <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             whileTap={{ y: 5 }}
-            className="flex justify-center items-center gap-2 w-60 bg-cyan-300 h-12 cursor-pointer rounded-md p-2 text-black"
+            className="flex justify-center items-center gap-2 w-60 bg-cyan-300 h-12 cursor-pointer rounded-md p-2 text-black shadow-cyan-300"
+            disabled={sendingRsvp || rsvpSent}
+            onClick={handleSendRsvp}
           >
             ACCEPT MISSION <span className="text-[12px]">(RSVP)</span>
           </motion.button>
+
+          {rsvpSent && (
+            <ConfettiExplosion
+              force={0.8}
+              duration={3000}
+              particleCount={250}
+              particleSize={5}
+              onComplete={() =>
+                redirect(`/invited?invitee_identifier=${invitee_identifier}`)
+              }
+            />
+          )}
         </div>
       </motion.div>
     </div>
   );
 };
 
-export const Hero = () => {
+export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
   const [showLines, setShowLines] = useState({
     first: false,
     second: false,
@@ -96,6 +153,9 @@ export const Hero = () => {
   const handleShowInvite = () => {
     setShowInvite(true);
   };
+
+  const genderPronoun = getGenderPronoun(gender);
+  const personalPronoun = getPersonalPronoun(gender);
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
@@ -141,7 +201,7 @@ export const Hero = () => {
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: "75vh", opacity: 1 }}
         transition={{ delay: 3, duration: 1 }}
-        className="absolute top-1/2 left-1/2 lg:left-1/5 transform -translate-x-1/2 -translate-y-1/2 w-full lg:w-2xl bg-black/70 p-4 lg:p-6 rounded-lg"
+        className="absolute top-1/2 left-1/2 lg:left-1/5 transform -translate-x-1/2 -translate-y-1/2 w-sm lg:w-2xl bg-black/75 p-4 lg:p-6 rounded-lg"
       >
         <AnimatePresence mode="wait" exitBeforeEnter>
           {showInvite ? (
@@ -152,7 +212,11 @@ export const Hero = () => {
               exit={{ opacity: 0 }}
               transition={{ delay: 1, duration: 1 }}
             >
-              <Invite />
+              <Invite
+                callout_name={callout_name}
+                token={token}
+                invitee_identifier={invitee_identifier}
+              />
             </motion.div>
           ) : (
             <motion.div
@@ -167,7 +231,7 @@ export const Hero = () => {
                 <p className="text-cyan-300 text-md">
                   <Typewriter
                     words={[
-                      "After successfully completing her last space mission, our brave space commander, Nyra, is eagerly awaiting news of her next exciting adventure.",
+                      `After successfully completing ${genderPronoun} last space mission, our brave space commander, ${callout_name}, is eagerly awaiting news of ${genderPronoun} next exciting adventure.`,
                     ]}
                     loop={1}
                     typeSpeed={50}
@@ -180,7 +244,7 @@ export const Hero = () => {
                 <p className="text-cyan-300 text-md mt-5">
                   <Typewriter
                     words={[
-                      "Just then, she receives an important message from mission control.",
+                      `Just then, ${personalPronoun} receives an important message from mission control.`,
                     ]}
                     loop={1}
                     typeSpeed={50}

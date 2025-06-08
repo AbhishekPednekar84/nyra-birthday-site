@@ -1,43 +1,27 @@
-"use client";
+import { LandingWrapper } from "@/components/LandingWrapper";
+import { notFound, redirect } from "next/navigation";
+import axios from "axios";
 
-import { useState, useEffect } from "react";
-import { Landing, Hero } from "@/components";
-import { motion, AnimatePresence } from "framer-motion";
+export default async function Home({ searchParams }) {
+  const identifier = await searchParams.invitee_identifier;
+  let res = {};
 
-export default function Home() {
-  const [showLanding, setShowLanding] = useState(true);
+  try {
+    res = await axios.get(
+      `${process.env.API_URL}/invitees?invitee_identifier=${identifier}`
+    );
+  } catch (error) {
+    console.log(error);
+    redirect("/404");
+  }
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLanding(false), 10000);
-    return () => clearTimeout(timer);
-  }, []);
+  if (res?.data && (res?.data?.invitee?.rsvp || !res?.data?.invitee?.child)) {
+    redirect(`/invited?invitee_identifier=${identifier}`);
+  }
 
   return (
     <main>
-      <section className="relative h-screen w-full overflow-hidden">
-        <AnimatePresence>
-          {showLanding ? (
-            <motion.div
-              key="landing"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
-            >
-              <Landing />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="hero"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 1 }}
-            >
-              <Hero />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
+      <LandingWrapper apiResponse={res.data} />
     </main>
   );
 }

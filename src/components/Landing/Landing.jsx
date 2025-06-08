@@ -1,9 +1,10 @@
-"use Client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import { Typewriter } from "react-simple-typewriter";
 import { PLANET_NAMES } from "@/utils/constants";
+import { generateRandomIndex } from "@/utils/helpers";
 
 export const Landing = () => {
   const [planetName, setPlanetName] = useState(null);
@@ -13,7 +14,7 @@ export const Landing = () => {
   const formattedDateTime = now.toFormat("EEEE, MMMM d',' yyyy, h:mm a");
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * PLANET_NAMES?.length);
+    const randomIndex = generateRandomIndex(PLANET_NAMES?.length);
     setPlanetName(PLANET_NAMES[randomIndex]);
 
     setTimeout(() => {

@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>It's Nyra's Birthday!</title>
+        <title>{"It's Nyra's Birthday!"}</title>
         <meta name="title" content="It's Nyra's Birthday!" />
         <meta
           name="description"

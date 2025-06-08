@@ -6,7 +6,7 @@ export const metadata = {
 export default function NotFound() {
   return (
     <div className="w-screen h-screen flex justify-center items-center text-lg lg:text-2xl text-zinc-100">
-      Sorry, couldn't find your invite
+      {"Sorry, couldn't find your invite"}
     </div>
   );
 }

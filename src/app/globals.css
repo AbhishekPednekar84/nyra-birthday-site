@@ -21,7 +21,11 @@
 
 @layer components {
   .text-responsive {
-    @apply text-sm lg:text-base;
+    @apply text-[12px] sm:text-sm lg:text-base;
+  }
+
+  .text-responsive-schoolbell {
+    @apply text-base lg:text-2xl;
   }
 }
 

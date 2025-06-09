@@ -35,38 +35,40 @@ const ConfirmedInvitationChild = ({ name }) => {
   }, []);
 
   return (
-    <div className="p-2 text-cyan-300 relative h-full">
+    <div className="text-cyan-300 relative h-full">
       <motion.div
         variants={opacityVariant}
         initial="initial"
         animate="animate"
         transition={{ delay: 3, duration: 1 }}
       >
-        <div className="my-4">
-          <p className="text-lg text-orange-300">
-            Commander {name} - your mission starts {calculateDays()}
+        <div className="mb-4">
+          <p className="text-base text-orange-300">
+            Commander <span className="text-cyan-300">{name}</span> - your
+            mission starts{" "}
+            <span className="text-cyan-300">{calculateDays()}</span>
           </p>
         </div>
 
-        <div className="my-5">
+        <div className="my-4 md:my-5">
           <p className="text-responsive">Here's your mission summary</p>
         </div>
 
-        <div className="my-7">
+        <div className="my-4 md:my-5">
           <p className="text-responsive text-orange-300">{`>>> MISSION LOCATION:`}</p>
           <p className="text-responsive">
             The party hall at the Republic of Whitefield Clubhouse
           </p>
         </div>
 
-        <div className="my-7">
+        <div className="my-4 md:my-5">
           <p className="text-responsive text-orange-300">{`>>> MISSION WINDOW:`}</p>
           <p className="text-responsive">
             Saturday, June 21<sup>st</sup> at 12:00 PM (Standard Earth Time)
           </p>
         </div>
 
-        <div className="my-7">
+        <div className="my-4 md:my-5">
           <p className="text-responsive text-orange-300">{`>>> MISSION PARAMETERS:`}</p>
           <p className="text-responsive mb-1">
             1. Fun is not optional — it's mandatory. 😄
@@ -78,7 +80,7 @@ const ConfirmedInvitationChild = ({ name }) => {
         </div>
       </motion.div>
 
-      <div className="absolute bottom-3">
+      <div className="absolute bottom-3 text-responsive">
         {showFooter && (
           <Typewriter
             words={[footerText]}
@@ -103,7 +105,7 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
   const rsvpDone = rsvp || rsvpSent;
 
   useEffect(() => {
-    if (rsvpData?.invitee_identifier) {
+    if (rsvpData?.status === "ok") {
       setSendingRsvp(false);
       setRsvpSent(true);
       setShowConfetti(true);
@@ -111,17 +113,27 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
   }, [rsvpData]);
 
   const handleSendRsvp = async () => {
-    const payload = { invitee_identifier };
+    const payload = { invitee_identifier, token };
     const headers = `Bearer ${token}`;
     setSendingRsvp(true);
 
     try {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/invitees`,
+      // const res = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/invitees`,
+      //   payload,
+      //   {
+      //     headers: {
+      //       Authorization: headers,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_FYNO_WORKFLOW_URL}`,
         payload,
         {
           headers: {
-            Authorization: headers,
             "Content-Type": "application/json",
           },
         }
@@ -141,29 +153,29 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
       initial="initial"
       animate="animate"
       transition={{ delay: 2, duration: 1 }}
-      className={`${schoolbell.className} text-orange-300 text-lg lg:text-2xl relative h-full`}
+      className={`${schoolbell.className} text-orange-300 text-lg lg:text-2xl relative h-full `}
     >
-      <p>
+      <p className="text-responsive-schoolbell">
         Dear <span className="text-cyan-300">{name}</span>,
       </p>
 
-      <div className="my-5">
-        <p>
+      <div className="my-3 md:my-5">
+        <p className="text-responsive-schoolbell">
           I’m turning five! And I’m having a{" "}
           <strong>super fun birthday party</strong> and I really really want you
           to come! 🎉
         </p>
       </div>
 
-      <div className="my-5">
-        <p>
+      <div className="my-3 md:my-5">
+        <p className="text-responsive-schoolbell">
           There will be balloons, cake (with lots of icing), games and a lot of
           yummy food! 🎈
         </p>
       </div>
 
-      <div className="my-5">
-        <p>
+      <div className="my-3 md:my-5">
+        <p className="text-responsive-schoolbell">
           The party is on{" "}
           <span className="text-cyan-300">
             Saturday, June 21<sup>st</sup> at 12:00 PM
@@ -175,11 +187,13 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
         </p>
       </div>
 
-      <div className="my-5">
-        <p>Please come, okay? I will save you a big piece of cake 🍰</p>
+      <div className="my-3 md:my-5">
+        <p className="text-responsive-schoolbell">
+          Please come, okay? I will save you a big piece of cake 🍰
+        </p>
       </div>
 
-      <div className="my-5">
+      <div className="my-3 md:my-5">
         <AnimatePresence mode="wait">
           {rsvpDone ? (
             <motion.p
@@ -189,9 +203,9 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
               animate="animate"
               transition={{ duration: 1 }}
               exit="initial"
-              className="mb-2"
+              className="mb-2 text-responsive-schoolbell"
             >
-              See you {calculateDays()}!!
+              See you <span className="text-cyan-300">{calculateDays()}</span>!!
             </motion.p>
           ) : (
             <motion.p
@@ -200,6 +214,7 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
               initial="initial"
               animate="animate"
               exit="initial"
+              className="text-responsive-schoolbell"
             >
               Just click on the button so that Amma and Daddy know that you are
               coming :)
@@ -208,8 +223,8 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
         </AnimatePresence>
       </div>
 
-      <div className="my-5">
-        <p className="text-cyan-300">
+      <div className="my-3 md:my-5">
+        <p className="text-cyan-300 text-responsive-schoolbell">
           <span className="text-orange-300">-</span> Nyra
         </p>
       </div>
@@ -219,17 +234,16 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
           {!rsvpDone && (
             <motion.button
               key="rsvp-button"
-              variants={opacityVariant}
-              initial="initial"
-              animate="animate"
-              transition={{ delay: 3 }}
-              exit="initial"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 3, duration: 1 }}
               whileTap={{ y: 5 }}
               disabled={sendingRsvp || rsvpSent}
               onClick={handleSendRsvp}
-              className="flex justify-center items-center gap-2 w-60 bg-cyan-300 h-12 cursor-pointer rounded-md p-2 text-black shadow-cyan-300 tracking-wider"
+              className="flex justify-center items-center gap-2 w-60 bg-cyan-300 h-10 md:h-12 cursor-pointer rounded-md p-2 text-black shadow-cyan-300 tracking-widest font-semibold"
             >
-              RSVP ❤️
+              {sendingRsvp ? "...RSVP'ing" : "RSVP ❤️"}
             </motion.button>
           )}
 
@@ -276,7 +290,7 @@ export const Invited = ({ apiResponse }) => {
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: "75vh", opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
-        className="w-sm lg:w-2xl bg-black/75 p-4 lg:p-6 rounded-lg"
+        className="w-xs md:w-xl lg:w-2xl h-full bg-black/75 p-3 lg:p-6 rounded-lg"
       >
         {child ? (
           <ConfirmedInvitationChild name={callout_name} />

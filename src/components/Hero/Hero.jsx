@@ -20,24 +20,34 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
   const [rsvpData, setRsvpData] = useState({});
 
   useEffect(() => {
-    if (rsvpData?.invitee_identifier) {
+    if (rsvpData?.status === "ok") {
       setSendingRsvp(false);
       setRsvpSent(true);
     }
   }, [rsvpData]);
 
   const handleSendRsvp = async () => {
-    const payload = { invitee_identifier };
+    const payload = { invitee_identifier, token };
     const headers = `Bearer ${token}`;
     setSendingRsvp(true);
 
     try {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/invitees`,
+      // const res = await axios.put(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/invitees`,
+      //   payload,
+      //   {
+      //     headers: {
+      //       Authorization: headers,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_FYNO_WORKFLOW_URL}`,
         payload,
         {
           headers: {
-            Authorization: headers,
             "Content-Type": "application/json",
           },
         }
@@ -53,7 +63,9 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
 
   return (
     <div className="text-cyan-300">
-      <p className="text-orange-300">INCOMING TRANSMISSION - TOP SECRET(ISH)</p>
+      <p className="text-orange-300 text-responsive">
+        INCOMING TRANSMISSION - TOP SECRET(ISH)
+      </p>
 
       <motion.div
         variants={opacityVariant}
@@ -93,10 +105,10 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
 
         <div className="my-4">
           <p className="text-responsive text-orange-300">{`>>> MISSION PARAMETERS:`}</p>
-          <p className="text-responsive">
+          <p className="text-responsive mb-1">
             1. Hit the button below to accept your mission. ✅
           </p>
-          <p className="text-responsive">
+          <p className="text-responsive mb-1">
             2. Fun is not optional — it's mandatory. 😄
           </p>
           <p className="text-responsive">
@@ -112,30 +124,49 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
           </p>
         </div>
 
-        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 4, duration: 1 }}
-            whileTap={{ y: 5 }}
-            className="flex justify-center items-center gap-2 w-60 bg-cyan-300 h-12 cursor-pointer rounded-md p-2 text-black shadow-cyan-300"
-            disabled={sendingRsvp || rsvpSent}
-            onClick={handleSendRsvp}
-          >
-            ACCEPT MISSION <span className="text-[12px]">(RSVP)</span>
-          </motion.button>
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <AnimatePresence mode="wait">
+            {!rsvpSent && (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 4, duration: 1 }}
+                exit={{ opacity: 0 }}
+                whileTap={{ y: 5 }}
+                className="flex justify-center items-center gap-2 w-60 bg-cyan-300 h-10 md:h-12 cursor-pointer rounded-md p-2 text-black shadow-cyan-300 text-responsive font-semibold"
+                disabled={sendingRsvp || rsvpSent}
+                onClick={handleSendRsvp}
+              >
+                {sendingRsvp ? "...ACCEPTING MISSION" : "ACCEPT MISSION"}{" "}
+                {!sendingRsvp && <span className="text-[12px]">(RSVP)</span>}
+              </motion.button>
+            )}
 
-          {rsvpSent && (
-            <ConfettiExplosion
-              force={0.8}
-              duration={3000}
-              particleCount={250}
-              particleSize={5}
-              onComplete={() =>
-                redirect(`/invited?invitee_identifier=${invitee_identifier}`)
-              }
-            />
-          )}
+            {rsvpSent && (
+              <ConfettiExplosion
+                force={0.8}
+                duration={3000}
+                particleCount={250}
+                particleSize={5}
+                onComplete={() =>
+                  redirect(`/invited?invitee_identifier=${invitee_identifier}`)
+                }
+              />
+            )}
+
+            {rsvpSent && (
+              <motion.p
+                key="rsvp-done"
+                variants={opacityVariant}
+                initial="initial"
+                animate="animate"
+                exit="initial"
+                className="text-cyan-300 text-responsive mb-1"
+              >
+                Mission Accepted! 🚀
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
     </div>
@@ -202,7 +233,7 @@ export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: showInvite ? "90vh" : "70vh", opacity: 1 }}
         transition={{ delay: 3, duration: 1 }}
-        className="absolute top-1/2 left-1/2 lg:left-1/5 transform -translate-x-1/2 -translate-y-1/2 w-sm lg:w-2xl bg-black/75 p-4 lg:p-6 rounded-lg"
+        className="absolute top-1/2 left-1/2 md:left-1/2 lg:left-1/4 transform -translate-x-1/2 -translate-y-1/2 w-xs md:w-xl lg:w-2xl h-full bg-black/75 p-3 lg:p-6 rounded-lg"
       >
         <AnimatePresence mode="wait" exitBeforeEnter>
           {showInvite ? (
@@ -229,7 +260,7 @@ export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
               transition={{ duration: 0.5 }}
             >
               {showLines?.first && (
-                <p className="text-cyan-300 text-md">
+                <p className="text-cyan-300 text-responsive">
                   <Typewriter
                     words={[
                       `After successfully completing ${genderPronoun} last space mission, our brave space commander, ${callout_name}, is eagerly awaiting news of ${genderPronoun} next exciting adventure.`,
@@ -242,7 +273,7 @@ export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
               )}
 
               {showLines?.second && (
-                <p className="text-cyan-300 text-md mt-5">
+                <p className="text-cyan-300 text-responsive mt-5">
                   <Typewriter
                     words={[
                       `Just then, ${personalPronoun} receives an important message from mission control.`,
@@ -261,7 +292,7 @@ export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
                     initial="initial"
                     animate="animate"
                     whileTap={{ y: 5 }}
-                    className="flex justify-center items-center gap-2 w-50 bg-cyan-300 h-12 cursor-pointer rounded-md p-2 text-black"
+                    className="flex justify-center items-center gap-2 w-50 bg-cyan-300 h-10 md:h-12 cursor-pointer rounded-md p-2 text-black text-responsive font-semibold tracking-wider"
                     onClick={handleShowInvite}
                   >
                     <PlayCircle className="h-6 w-6" />

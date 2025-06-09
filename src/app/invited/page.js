@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import axios from "axios";
 
 export default async function InvitedPage({ searchParams }) {
-  const identifier = await searchParams.invitee_identifier;
+  const identifier = searchParams.invitee_identifier;
 
   let res = {};
 
@@ -16,7 +16,10 @@ export default async function InvitedPage({ searchParams }) {
     redirect("/404");
   }
 
-  console.log(res.data);
+  // For children who have not RSVP'ed, redirect to the home page
+  if (res?.data?.invitee?.child && !res?.data?.invitee?.rsvp) {
+    redirect(`/?invitee_identifier=${identifier}`);
+  }
 
   return (
     <main>

@@ -23,7 +23,7 @@ export const Landing = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen font-autowide flex flex-col justify-center items-center text-lg lg:text-2xl text-cyan-300 font-stretch-50% glow px:5 lg:px-0">
+    <div className="h-screen w-screen font-autowide flex flex-col justify-center items-center text-md lg:text-2xl text-cyan-300 font-stretch-50% glow px:5 lg:px-0">
       <div>
         <Typewriter
           words={[formattedDateTime]}
@@ -34,7 +34,7 @@ export const Landing = () => {
       </div>
 
       {showSecondLine && (
-        <div className="mt-5 ml-1">
+        <div className="mt-5 lg:ml-1">
           <Typewriter
             words={[`Somewhere on planet ${planetName}`]}
             typeSpeed={70}

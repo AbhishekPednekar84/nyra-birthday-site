@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import axios from "axios";
 
 export default async function Home({ searchParams }) {
-  const identifier = await searchParams.invitee_identifier;
+  const identifier = searchParams.invitee_identifier;
   let res = {};
 
   try {
@@ -11,7 +11,6 @@ export default async function Home({ searchParams }) {
       `${process.env.API_URL}/invitees?invitee_identifier=${identifier}`
     );
   } catch (error) {
-    console.log(error);
     redirect("/404");
   }
 

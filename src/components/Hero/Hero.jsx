@@ -75,7 +75,7 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
       >
         <div className="my-4">
           <p className="text-responsive text-orange-300">
-            [ORIGIN: PLANET ROW]
+            [ORIGIN: PLANET R.O.W]
           </p>
           <p className="text-responsive">[To: Commander {callout_name}]</p>
         </div>

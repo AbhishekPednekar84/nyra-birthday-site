@@ -36,5 +36,5 @@ export const FOOTER_TEXT = [
   "...fuel up on excitement — you're headed for a galaxy of giggles! 🌌😆",
   "...don’t forget your space helmet and your party hat! 🪐🎉",
   "...galactic giggles guaranteed. Bring your best laugh! 😂🛸",
-  "...star Command is counting on you to have a blast. 💃🕺✨",
+  "...mission control is counting on you to have a blast. 💃🕺✨",
 ];

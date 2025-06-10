@@ -85,7 +85,11 @@ const Invite = ({ callout_name, token, invitee_identifier, rsvp }) => {
           <p className="text-responsive text-orange-300">{`>>> MISSION DIRECTIVE:`}</p>
           <p className="text-responsive">
             You’re officially invited to an out-of-this-world celebration for
-            Commander Nyra’s birthday! 🎉🪐
+            Commander Nyra’s{" "}
+            <span className="text-orange-300">
+              5<sup>th</sup>
+            </span>{" "}
+            birthday! 🎉🪐
           </p>
         </div>
 

@@ -38,3 +38,8 @@ export const FOOTER_TEXT = [
   "...galactic giggles guaranteed. Bring your best laugh! 😂🛸",
   "...mission control is counting on you to have a blast. 💃🕺✨",
 ];
+
+export const EMAIL_RECIPIENTS = [
+  { email: "abhishek.p84@gmail.com" },
+  { email: "aparna121@gmail.com" },
+];

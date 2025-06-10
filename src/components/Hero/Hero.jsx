@@ -8,13 +8,14 @@ import { getGenderPronoun, getPersonalPronoun } from "@/utils/helpers";
 import axios from "axios";
 import ConfettiExplosion from "react-confetti-explosion";
 import { redirect } from "next/navigation";
+import { EMAIL_RECIPIENTS } from "@/utils/constants";
 
 const opacityVariant = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
 };
 
-const Invite = ({ callout_name, token, invitee_identifier }) => {
+const Invite = ({ callout_name, token, invitee_identifier, rsvp }) => {
   const [sendingRsvp, setSendingRsvp] = useState(false);
   const [rsvpSent, setRsvpSent] = useState(false);
   const [rsvpData, setRsvpData] = useState({});
@@ -27,7 +28,7 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
   }, [rsvpData]);
 
   const handleSendRsvp = async () => {
-    const payload = { invitee_identifier, token };
+    const payload = { invitee_identifier, token, recipients: EMAIL_RECIPIENTS };
     const headers = `Bearer ${token}`;
     setSendingRsvp(true);
 
@@ -73,14 +74,14 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
         animate="animate"
         transition={{ delay: 3, duration: 1 }}
       >
-        <div className="my-4">
+        <div className={`my-4 ${rsvp && "lg:my-7"}`}>
           <p className="text-responsive text-orange-300">
             [ORIGIN: PLANET R.O.W]
           </p>
           <p className="text-responsive">[To: Commander {callout_name}]</p>
         </div>
 
-        <div className="my-4">
+        <div className={`my-4 ${rsvp && "lg:my-7"}`}>
           <p className="text-responsive text-orange-300">{`>>> MISSION DIRECTIVE:`}</p>
           <p className="text-responsive">
             You’re officially invited to an out-of-this-world celebration for
@@ -88,7 +89,7 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
           </p>
         </div>
 
-        <div className="my-4">
+        <div className={`my-4 ${rsvp && "lg:my-7"}`}>
           <p className="text-responsive text-orange-300">{`>>> MISSION LOCATION:`}</p>
           <p className="text-responsive">
             The party hall at the Republic of Whitefield Clubhouse – aka
@@ -103,7 +104,7 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
           </p>
         </div>
 
-        <div className="my-4">
+        <div className={`my-4 ${rsvp && "lg:my-7"}`}>
           <p className="text-responsive text-orange-300">{`>>> MISSION PARAMETERS:`}</p>
           <p className="text-responsive mb-1">
             1. Hit the button below to accept your mission. ✅
@@ -117,7 +118,7 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
           </p>
         </div>
 
-        <div className="my-4">
+        <div className={`my-4 ${rsvp && "lg:my-7"}`}>
           <p className="text-responsive text-orange-300">END OF TRANSMISSION</p>
           <p className="text-responsive">
             (But the party is just getting started...)
@@ -126,7 +127,7 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
 
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <AnimatePresence mode="wait">
-            {!rsvpSent && (
+            {!rsvpSent && !rsvp && (
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -173,7 +174,13 @@ const Invite = ({ callout_name, token, invitee_identifier }) => {
   );
 };
 
-export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
+export const Hero = ({
+  callout_name,
+  gender,
+  token,
+  invitee_identifier,
+  rsvp,
+}) => {
   const [showLines, setShowLines] = useState({
     first: false,
     second: false,
@@ -248,6 +255,7 @@ export const Hero = ({ callout_name, gender, token, invitee_identifier }) => {
                 callout_name={callout_name}
                 token={token}
                 invitee_identifier={invitee_identifier}
+                rsvp={rsvp}
               />
             </motion.div>
           ) : (

@@ -13,6 +13,7 @@ export const LandingWrapper = ({ apiResponse }) => {
       child = false,
       gender = "",
       invitee_identifier = "",
+      rsvp = false,
     } = {},
     token = "",
   } = apiResponse || {};
@@ -20,7 +21,7 @@ export const LandingWrapper = ({ apiResponse }) => {
   const [showLanding, setShowLanding] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowLanding(false), 10000);
+    const timer = setTimeout(() => setShowLanding(false), 9000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -50,6 +51,7 @@ export const LandingWrapper = ({ apiResponse }) => {
                 gender={gender}
                 token={token}
                 invitee_identifier={invitee_identifier}
+                rsvp={rsvp}
               />
             </motion.div>
           )}

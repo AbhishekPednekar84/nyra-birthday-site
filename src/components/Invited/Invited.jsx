@@ -9,6 +9,8 @@ import { generateRandomIndex } from "@/utils/helpers";
 import ConfettiExplosion from "react-confetti-explosion";
 import axios from "axios";
 
+import { EMAIL_RECIPIENTS } from "@/utils/constants";
+
 import { Schoolbell } from "next/font/google";
 
 const schoolbell = Schoolbell({
@@ -113,7 +115,7 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
   }, [rsvpData]);
 
   const handleSendRsvp = async () => {
-    const payload = { invitee_identifier, token };
+    const payload = { invitee_identifier, token, recipients: EMAIL_RECIPIENTS };
     const headers = `Bearer ${token}`;
     setSendingRsvp(true);
 

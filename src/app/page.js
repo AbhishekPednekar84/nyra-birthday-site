@@ -14,7 +14,7 @@ export default async function Home({ searchParams }) {
     redirect("/404");
   }
 
-  if (res?.data && (res?.data?.invitee?.rsvp || !res?.data?.invitee?.child)) {
+  if (res?.data && !res?.data?.invitee?.child) {
     redirect(`/invited?invitee_identifier=${identifier}`);
   }
 

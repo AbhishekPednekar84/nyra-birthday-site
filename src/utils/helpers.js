@@ -32,6 +32,14 @@ export const calculateDays = () => {
   }
 };
 
+export const daysInNumbers = () => {
+  const partyDate = DateTime.fromISO("2025-06-21");
+
+  const today = DateTime.local().startOf("day");
+
+  return partyDate.diff(today, "days").toObject().days;
+};
+
 export const generateRandomIndex = (length) => {
   return Math.floor(Math.random() * length);
 };

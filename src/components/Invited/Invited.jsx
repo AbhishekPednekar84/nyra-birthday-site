@@ -161,7 +161,7 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
         Dear <span className="text-cyan-300">{name}</span>,
       </p>
 
-      <div className="my-3 md:my-5">
+      {/* <div className="my-3 md:my-5">
         <p className="text-responsive-schoolbell">
           I’m turning five! And I’m having a{" "}
           <strong>super fun birthday party</strong> and I really really want you
@@ -223,6 +223,12 @@ const ConfirmInvitationAdult = ({ name, invitee_identifier, token, rsvp }) => {
             </motion.p>
           )}
         </AnimatePresence>
+      </div> */}
+
+      <div className="my-3 md:my-5">
+        <p className="text-responsive-schoolbell">
+          Thank you for attending my party! 🙂
+        </p>
       </div>
 
       <div className="my-3 md:my-5">
